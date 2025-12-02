@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment - Cloud Kitchen{% endblock %}
+
+{% block content %}
+<h1>Payment</h1>
+
+<p><strong>Total Amount: ${{ "%.2f"|format(total) }}</strong></p>
+
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
+    <label for="payment_method">Payment Method:</label>
+    {{ form.payment_method(id='payment_method') }}
+    {% for error in form.payment_method.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <div id="card-details">
+        <h3>Card Details</h3>
+        <p><em>Note: This is a demo. No real payment is processed.</em></p>
+        
+        <label for="card_number">Card Number:</label>
+        {{ form.card_number(id='card_number', placeholder='1234 5678 9012 3456') }}
+        
+        <label for="card_expiry">Expiry Date:</label>
+        {{ form.card_expiry(id='card_expiry', placeholder='MM/YY') }}
+        
+        <label for="card_cvv">CVV:</label>
+        {{ form.card_cvv(id='card_cvv', placeholder='123') }}
+    </div>
+    
+    <button type="submit" class="btn-success">Place Order</button>
+    <a href="{{ url_for('checkout') }}" class="btn">Back</a>
+</form>
+
+<script>
+    document.getElementById('payment_method').addEventListener('change', function() {
+        var cardDetails = document.getElementById('card-details');
+        if (this.value === 'cash') {
+            cardDetails.style.display = 'none';
+        } else {
+            cardDetails.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Cloud Kitchen{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
+    <label for="name">Item Name:</label>
+    {{ form.name(id='name') }}
+    {% for error in form.name.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="description">Description:</label>
+    {{ form.description(id='description', rows=3) }}
+    {% for error in form.description.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="price">Price ($):</label>
+    {{ form.price(id='price', step='0.01') }}
+    {% for error in form.price.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="category">Category:</label>
+    {{ form.category(id='category') }}
+    {% for error in form.category.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label>
+        {{ form.available() }} Available
+    </label>
+    
+    <p style="margin-top: 20px;">
+        <button type="submit" class="btn-success">Save</button>
+        <a href="{{ url_for('admin_menu') }}" class="btn">Cancel</a>
+    </p>
+</form>
+{% endblock %}
+

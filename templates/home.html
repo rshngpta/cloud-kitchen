@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Cloud Kitchen - Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Cloud Kitchen</h1>
+<p>Your favorite food, delivered fresh!</p>
+
+<h2>Quick Links</h2>
+<ul>
+    <li><a href="{{ url_for('menu') }}">Browse Menu</a> - View our delicious offerings</li>
+    <li><a href="{{ url_for('cart') }}">View Cart</a> - Check your selected items</li>
+    <li><a href="{{ url_for('track_order') }}">Track Order</a> - Check your order status</li>
+</ul>
+
+<h2>Features</h2>
+<ul>
+    <li>Browse our menu with various categories</li>
+    <li>Add items to your cart</li>
+    <li>Easy checkout process</li>
+    <li>Secure payment options</li>
+    <li>Real-time order tracking</li>
+</ul>
+
+<p><a href="{{ url_for('menu') }}" class="btn">Order Now</a></p>
+{% endblock %}
+

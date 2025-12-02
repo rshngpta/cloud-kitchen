@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - Cloud Kitchen{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<h2>Order Summary</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.menu_item.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ "%.2f"|format(item.subtotal) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2">Total</th>
+            <th>${{ "%.2f"|format(total) }}</th>
+        </tr>
+    </tfoot>
+</table>
+
+<h2>Delivery Details</h2>
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
+    <label for="customer_name">Full Name:</label>
+    {{ form.customer_name(id='customer_name') }}
+    {% for error in form.customer_name.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="customer_email">Email:</label>
+    {{ form.customer_email(id='customer_email') }}
+    {% for error in form.customer_email.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="customer_phone">Phone:</label>
+    {{ form.customer_phone(id='customer_phone') }}
+    {% for error in form.customer_phone.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <label for="customer_address">Delivery Address:</label>
+    {{ form.customer_address(id='customer_address', rows=3) }}
+    {% for error in form.customer_address.errors %}
+        <p class="error-msg">{{ error }}</p>
+    {% endfor %}
+    
+    <button type="submit" class="btn-success">Proceed to Payment</button>
+    <a href="{{ url_for('cart') }}" class="btn">Back to Cart</a>
+</form>
+{% endblock %}
+

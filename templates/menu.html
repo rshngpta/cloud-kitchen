@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu - Cloud Kitchen{% endblock %}
+
+{% block content %}
+<h1>Our Menu</h1>
+
+<p>Filter by category: 
+    <a href="{{ url_for('menu', category='all') }}">All</a> |
+    <a href="{{ url_for('menu', category='starters') }}">Starters</a> |
+    <a href="{{ url_for('menu', category='main_course') }}">Main Course</a> |
+    <a href="{{ url_for('menu', category='desserts') }}">Desserts</a> |
+    <a href="{{ url_for('menu', category='beverages') }}">Beverages</a>
+</p>
+
+{% if items %}
+<div class="grid">
+    {% for item in items %}
+    <div class="card">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+        <p><strong>Price: ${{ "%.2f"|format(item.price) }}</strong></p>
+        <p>Category: {{ item.category }}</p>
+        <form action="{{ url_for('add_to_cart', item_id=item.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Quantity: 
+                <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px;">
+            </label>
+            <button type="submit">Add to Cart</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No items available in this category.</p>
+{% endif %}
+{% endblock %}
+

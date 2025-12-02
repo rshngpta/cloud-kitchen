@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Track Order - Cloud Kitchen{% endblock %}
+
+{% block content %}
+<h1>Track Your Order</h1>
+
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="order_id">Enter Order ID:</label>
+    <input type="number" name="order_id" id="order_id" required placeholder="e.g., 1">
+    <button type="submit">Track Order</button>
+</form>
+
+{% if order %}
+<div class="card">
+    <h2>Order #{{ order.id }}</h2>
+    <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p><strong>Payment:</strong> {{ order.payment_method }} - {{ order.payment_status }}</p>
+    <p><strong>Total:</strong> ${{ "%.2f"|format(order.total_amount) }}</p>
+    <p><strong>Ordered on:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    
+    <h3>Order Items</h3>
+    <ul>
+        {% for item in order.items %}
+        <li>{{ item.menu_item.name }} x {{ item.quantity }} - ${{ "%.2f"|format(item.quantity * item.price) }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
+
