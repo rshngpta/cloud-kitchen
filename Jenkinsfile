@@ -3,6 +3,7 @@ pipeline {
     
     environment {
         APP_NAME = 'cloud-kitchen'
+        SONAR_HOST_URL = 'http://host.docker.internal:9000'
     }
     
     stages {
@@ -44,6 +45,28 @@ pipeline {
                     pip install pytest pytest-flask pytest-cov
                     python -m pytest tests/ -v --tb=short || true
                 '''
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube security scan...'
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        . venv/bin/activate
+                        pip install pysonar-scanner || true
+                        
+                        # Run SonarQube scanner
+                        sonar-scanner \
+                            -Dsonar.projectKey=cloud-kitchen \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.token=${SONAR_TOKEN} \
+                            -Dsonar.python.version=3.11 \
+                            -Dsonar.exclusions=venv/**,__pycache__/**,*.pyc,tests/** \
+                            || true
+                    '''
+                }
             }
         }
         
